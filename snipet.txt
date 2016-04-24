@@ -1,0 +1,11 @@
+sudo php app/console generate:bundle --namespace=PaymentBundle --dir=src --format=yml --no-interaction
+sudo php app/console generate:bundle --namespace=AppBundle --dir=src --format=yml --no-interaction
+
+sudo php app/console doctrine:generate:entity --entity=AppBundle:Page \
+  --format=yml --fields="title:string(255) body:text" \
+  --no-interaction
+
+sudo php app/console doctrine:database:create
+sudo php app/console doctrine:schema:create
+
+sudo php app/console doctrine:generate:form AppBundle:Page

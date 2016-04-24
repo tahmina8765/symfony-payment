@@ -1,0 +1,18 @@
+AppBundle\Entity\Page:
+    type: entity
+    table: page
+    repositoryClass: AppBundle\Repository\PageRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+            length: 255
+        body:
+            type: text
+     
+    lifecycleCallbacks: {  }
