@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
+use AppBundle\Service\BdmobileService;
 
 class PaymentController extends FOSRestController
 {
@@ -15,8 +16,11 @@ class PaymentController extends FOSRestController
     }
     
     public function mobileAction(){
+        $mobileService = $this->get('app.bd_mobile');
+        $key = $mobileService->subscribe();
         $view = View::create()
-            ->setData(array('thread' => 'tahmina'));
+            ->setData(array('thread' => $key));
         return $this->handleView($view);
     }
+    
 }
