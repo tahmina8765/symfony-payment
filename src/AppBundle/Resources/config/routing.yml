@@ -1,11 +1,10 @@
-#app_homepage:
-#    path:     /
-#    defaults: { _controller: AppBundle:Default:index }
+app_homepage:
+    path:       /
+    defaults:   { _controller: AppBundle:Payment:index }
     
-app_page:
-    type: rest
-    prefix: /v1
-    resource: "AppBundle\\Controller\\PageController"
-    name_prefix:  api_1_
-
-
+app_mobop:
+    type:       rest
+    path:       /subscribe
+    defaults:   { _controller: AppBundle:Payment:mobile }
+    methods:    [POST]
+    
