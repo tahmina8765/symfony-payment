@@ -84,3 +84,8 @@ fos_rest:
     view:
         view_response_listener: true
 
+nelmio_api_doc: ~
+
+framework:
+    templating:
+        engines: ['twig']

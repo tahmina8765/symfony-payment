@@ -2,6 +2,11 @@ app_homepage:
     path:       /
     defaults:   { _controller: AppBundle:Payment:index }
     
+app_homepage:
+    path:       /status
+    defaults:   { _controller: AppBundle:Payment:status }
+    methods:    [GET]
+    
 app_mobop:
     type:       rest
     path:       /subscribe
