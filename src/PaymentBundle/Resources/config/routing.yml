@@ -1,4 +1,4 @@
 payment_invoice:
     resource: "@PaymentBundle/Resources/config/routing/invoice.yml"
-    prefix:   /invoice
+    prefix:   /invoices
 

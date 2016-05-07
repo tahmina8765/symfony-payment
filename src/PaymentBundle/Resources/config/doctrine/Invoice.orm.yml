@@ -1,6 +1,6 @@
 PaymentBundle\Entity\Invoice:
     type: entity
-    table: null
+    table: invoices
     repositoryClass: PaymentBundle\Repository\InvoiceRepository
     id:
         id:

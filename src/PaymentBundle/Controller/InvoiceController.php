@@ -27,6 +27,7 @@ class InvoiceController extends FOSRestController
     {
         $em = $this->getDoctrine()->getManager();
 
+
         $invoices = $em->getRepository('PaymentBundle:Invoice')->findAll();
 
         $view = $this->view($invoices, 200)
