@@ -24,7 +24,7 @@ class InvoiceController extends Controller
 
         $invoices = $em->getRepository('PaymentBundle:Invoice')->findAll();
 
-        return $this->render('invoice/index.html.twig', array(
+        return $this->render('PaymentBundle:Invoice:index.html.twig', array(
             'invoices' => $invoices,
         ));
     }
@@ -47,7 +47,7 @@ class InvoiceController extends Controller
             return $this->redirectToRoute('invoice_show', array('id' => $invoice->getId()));
         }
 
-        return $this->render('invoice/new.html.twig', array(
+        return $this->render('PaymentBundle:Invoice:new.html.twig', array(
             'invoice' => $invoice,
             'form' => $form->createView(),
         ));
@@ -61,7 +61,7 @@ class InvoiceController extends Controller
     {
         $deleteForm = $this->createDeleteForm($invoice);
 
-        return $this->render('invoice/show.html.twig', array(
+        return $this->render('PaymentBundle:Invoice:show.html.twig', array(
             'invoice' => $invoice,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -85,7 +85,7 @@ class InvoiceController extends Controller
             return $this->redirectToRoute('invoice_edit', array('id' => $invoice->getId()));
         }
 
-        return $this->render('invoice/edit.html.twig', array(
+        return $this->render('PaymentBundle:Invoice:edit.html.twig', array(
             'invoice' => $invoice,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
