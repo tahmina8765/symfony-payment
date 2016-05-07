@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Invoice list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Invoiceid</th>
+                <th>Countrycode</th>
+                <th>Gateway</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Servicename</th>
+                <th>Servicedescription</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Ipnurl</th>
+                <th>Status</th>
+                <th>Appname</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for invoice in invoices %}
+            <tr>
+                <td><a href="{{ path('invoice_show', { 'id': invoice.id }) }}">{{ invoice.id }}</a></td>
+                <td>{{ invoice.invoiceId }}</td>
+                <td>{{ invoice.countryCode }}</td>
+                <td>{{ invoice.gateway }}</td>
+                <td>{{ invoice.amount }}</td>
+                <td>{{ invoice.currency }}</td>
+                <td>{{ invoice.serviceName }}</td>
+                <td>{{ invoice.serviceDescription }}</td>
+                <td>{{ invoice.name }}</td>
+                <td>{{ invoice.email }}</td>
+                <td>{{ invoice.phone }}</td>
+                <td>{{ invoice.ipnUrl }}</td>
+                <td>{{ invoice.status }}</td>
+                <td>{{ invoice.appName }}</td>
+                <td>{% if invoice.created %}{{ invoice.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('invoice_show', { 'id': invoice.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('invoice_edit', { 'id': invoice.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('invoice_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

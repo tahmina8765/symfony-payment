@@ -1,0 +1,60 @@
+PaymentBundle\Entity\Invoice:
+    type: entity
+    table: null
+    repositoryClass: PaymentBundle\Repository\InvoiceRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        invoiceId:
+            type: string
+            length: 255
+            unique: true
+            column: invoice_id
+        countryCode:
+            type: string
+            length: '30'
+            column: country_code
+        gateway:
+            type: string
+            length: 255
+        amount:
+            type: float
+        currency:
+            type: string
+            length: '30'
+        serviceName:
+            type: string
+            length: 255
+            column: service_name
+        serviceDescription:
+            type: string
+            length: 255
+            column: service_description
+        name:
+            type: string
+            length: 255
+        email:
+            type: string
+            length: 255
+        phone:
+            type: string
+            length: 255
+        ipnUrl:
+            type: string
+            length: 255
+            nullable: true
+            column: ipn_url
+        status:
+            type: string
+            length: 255
+        appName:
+            type: string
+            length: 255
+            column: app_name
+        created:
+            type: datetime
+    lifecycleCallbacks: {  }

@@ -1,0 +1,24 @@
+invoice_index:
+    path:     /
+    defaults: { _controller: "PaymentBundle:Invoice:index" }
+    methods:  GET
+
+invoice_show:
+    path:     /{id}/show
+    defaults: { _controller: "PaymentBundle:Invoice:show" }
+    methods:  GET
+
+invoice_new:
+    path:     /new
+    defaults: { _controller: "PaymentBundle:Invoice:new" }
+    methods:  [GET, POST]
+
+invoice_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "PaymentBundle:Invoice:edit" }
+    methods:  [GET, POST]
+
+invoice_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "PaymentBundle:Invoice:delete" }
+    methods:  DELETE
