@@ -3,8 +3,12 @@
 namespace PaymentBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+//use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
+
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use PaymentBundle\Entity\Invoice;
 use PaymentBundle\Form\InvoiceType;
 
@@ -12,8 +16,9 @@ use PaymentBundle\Form\InvoiceType;
  * Invoice controller.
  *
  */
-class InvoiceController extends Controller
+class InvoiceController extends FOSRestController
 {
+
     /**
      * Lists all Invoice entities.
      *
@@ -24,9 +29,13 @@ class InvoiceController extends Controller
 
         $invoices = $em->getRepository('PaymentBundle:Invoice')->findAll();
 
-        return $this->render('PaymentBundle:Invoice:index.html.twig', array(
-            'invoices' => $invoices,
-        ));
+        $view = $this->view($invoices, 200)
+            ->setTemplate("PaymentBundle:Invoice:index.html.twig")
+             ->setTemplateVar('invoices')
+        ;
+
+        return $this->handleView($view);
+        
     }
 
     /**
@@ -36,7 +45,7 @@ class InvoiceController extends Controller
     public function newAction(Request $request)
     {
         $invoice = new Invoice();
-        $form = $this->createForm('PaymentBundle\Form\InvoiceType', $invoice);
+        $form    = $this->createForm('PaymentBundle\Form\InvoiceType', $invoice);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -48,8 +57,8 @@ class InvoiceController extends Controller
         }
 
         return $this->render('PaymentBundle:Invoice:new.html.twig', array(
-            'invoice' => $invoice,
-            'form' => $form->createView(),
+                    'invoice' => $invoice,
+                    'form'    => $form->createView(),
         ));
     }
 
@@ -62,8 +71,8 @@ class InvoiceController extends Controller
         $deleteForm = $this->createDeleteForm($invoice);
 
         return $this->render('PaymentBundle:Invoice:show.html.twig', array(
-            'invoice' => $invoice,
-            'delete_form' => $deleteForm->createView(),
+                    'invoice'     => $invoice,
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -74,7 +83,7 @@ class InvoiceController extends Controller
     public function editAction(Request $request, Invoice $invoice)
     {
         $deleteForm = $this->createDeleteForm($invoice);
-        $editForm = $this->createForm('PaymentBundle\Form\InvoiceType', $invoice);
+        $editForm   = $this->createForm('PaymentBundle\Form\InvoiceType', $invoice);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -86,9 +95,9 @@ class InvoiceController extends Controller
         }
 
         return $this->render('PaymentBundle:Invoice:edit.html.twig', array(
-            'invoice' => $invoice,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                    'invoice'     => $invoice,
+                    'edit_form'   => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -120,9 +129,10 @@ class InvoiceController extends Controller
     private function createDeleteForm(Invoice $invoice)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('invoice_delete', array('id' => $invoice->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
+                        ->setAction($this->generateUrl('invoice_delete', array('id' => $invoice->getId())))
+                        ->setMethod('DELETE')
+                        ->getForm()
         ;
     }
+
 }

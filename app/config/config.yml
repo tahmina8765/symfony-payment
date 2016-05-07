@@ -82,9 +82,26 @@ sensio_framework_extra:
 fos_rest:
     routing_loader:
         default_format: json
-    format_listener: true
+    param_fetcher_listener: true
+    body_listener: true
+    format_listener:
+        enabled: true
+        rules:
+            - { path: '^/', priorities: ['json', 'html', 'xml'], fallback_format: 'html' }
     view:
-        view_response_listener: true
+        view_response_listener: 'force'
+        formats:
+            jsonp: true
+            json: true
+            xml: true
+            rss: false
+        templating_formats:
+            html: true
+        force_redirects:
+            html: true
+        failed_validation: HTTP_BAD_REQUEST
+        default_engine: twig
+
 
 nelmio_api_doc: ~
 
