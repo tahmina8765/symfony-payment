@@ -24,11 +24,21 @@ class InvoiceService
         $this->formFactory = $formFactory;
     }
 
-    public function get()
+    public function get($id)
     {
-        $invoices = $this->repository->findAll();
-        return $invoices;
+        return $this->repository->find($id);
     }
+
+    public function all($limit = 100, $offset = 0)
+    {
+        return $this->repository->findBy(array(), null, $limit, $offset);
+    }
+
+//    public function get()
+//    {
+//        $invoices = $this->repository->findAll();
+//        return $invoices;
+//    }
 
     public function post($formdata)
     {
@@ -36,23 +46,70 @@ class InvoiceService
         return $this->processForm($invoice, $formdata, 'POST');
     }
 
+    public function put($invoice, $formdata)
+    {
+        return $this->processForm($invoice, $formdata, 'PUT');
+    }
+
     private function processForm($invoice, array $formdata, $method = "PUT")
     {
         $form = $this->formFactory->create(new InvoiceType(), $invoice, array('method' => $method));
         $form->submit($formdata['invoice'], 'PATCH' !== $method);
 
+
         if ($form->isValid()) {
             $invoice = $form->getData();
             $this->em->persist($invoice);
-            $this->em->flush();
+            $this->em->flush($invoice);
+
             return $invoice;
+        } else {
+             throw new InvalidFormException('Invalid submitted data', $form);
+//            return array(
+//                'status'=> false,
+//                'message' => $form->getErrorsAsString()
+//            );
+//            print_r($form->getErrorsAsString());
+//            die();
         }
-        throw new InvalidFormException('Invalid submitted data', $form);
+      
     }
 
     private function createInvoice()
     {
         return new $this->entityClass();
+    }
+
+    public function getAllErrors($children, $template = true)
+    {
+        $this->getAllFormErrors($children);
+        return $this->allErrors;
+    }
+
+    private function getAllFormErrors($children, $template = true)
+    {
+        foreach ($children as $child) {
+            if ($child->hasErrors()) {
+                $vars   = $child->createView()->getVars();
+                $errors = $child->getErrors();
+                foreach ($errors as $error) {
+                    $this->allErrors[$vars["name"]][] = $this->convertFormErrorObjToString($error);
+                }
+            }
+
+            if ($child->hasChildren()) {
+                $this->getAllErrors($child);
+            }
+        }
+    }
+
+    private function convertFormErrorObjToString($error)
+    {
+        $errorMessageTemplate = $error->getMessageTemplate();
+        foreach ($error->getMessageParameters() as $key => $value) {
+            $errorMessageTemplate = str_replace($key, $value, $errorMessageTemplate);
+        }
+        return $errorMessageTemplate;
     }
 
 }

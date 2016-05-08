@@ -16,9 +16,9 @@ invoice_new:
 invoice_edit:
     path:     /{id}/edit
     defaults: { _controller: "PaymentBundle:Invoice:edit" }
-    methods:  [GET, POST]
+    methods:  [GET, POST, PUT]
 
 invoice_delete:
     path:     /{id}/delete
     defaults: { _controller: "PaymentBundle:Invoice:delete" }
-    methods:  DELETE
+    methods:  [GET, DELETE]

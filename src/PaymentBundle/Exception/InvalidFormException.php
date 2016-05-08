@@ -18,7 +18,12 @@ class InvalidFormException extends \RuntimeException
      */
     public function getForm()
     {
-        return $this->form;
+        $returnData = array( 
+            'status' => false,
+            'message' => 'Invalid form',
+            'details' => $this->form
+        );
+        return $returnData;
     }
 
 }
