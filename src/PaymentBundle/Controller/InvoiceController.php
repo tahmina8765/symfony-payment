@@ -81,24 +81,12 @@ class InvoiceController extends FOSRestController
      */
     public function showAction(Invoice $invoice)
     {
-        $deleteForm = $this->createDeleteForm($invoice);
-        $returnData = array(
-            'invoice'     => $invoice,
-            'delete_form' => $deleteForm->createView(),
-        );
-        $view       = $this->view($returnData, Response::HTTP_OK)
+        $view = $this->view($invoice, Response::HTTP_OK)
                 ->setTemplate("PaymentBundle:Invoice:show.html.twig")
-//                ->setTemplateVar('invoice')
+                ->setTemplateVar('invoice')
         ;
 
         return $this->handleView($view);
-
-//        
-//
-//        return $this->render('PaymentBundle:Invoice:show.html.twig', array(
-//                    'invoice'     => $invoice,
-//                    'delete_form' => $deleteForm->createView(),
-//        ));
     }
 
     /**
@@ -150,8 +138,11 @@ class InvoiceController extends FOSRestController
     {
         if ($this->getRequest()->isMethod('GET')) {
 
-            $form = $this->container->get('form.factory')->create(new InvoiceType(), $invoice, array('method' => 'DELETE'));
-
+            // $form = $this->container->get('form.factory')->create(new InvoiceType(), $invoice, array('method' => 'DELETE'));
+            $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('invoice_delete', array('id' => $invoice->getId())))
+            ->setMethod('DELETE')
+            ->getForm();
             $returnData = array(
                 'delete_form' => $form->createView(),
             );
@@ -163,9 +154,9 @@ class InvoiceController extends FOSRestController
 
         if ($this->getRequest()->isMethod('DELETE')) {
             try {
-                
-                $result   = $this->get('payment.invoiceService')->delete($invoice);
-                $view     = $this->routeRedirectView('invoice_index', array(), Response::HTTP_NO_CONTENT);
+
+                $result = $this->get('payment.invoiceService')->delete($invoice);
+                $view   = $this->routeRedirectView('invoice_index', array(), Response::HTTP_NO_CONTENT);
             } catch (InvalidFormException $exception) {
                 $view = $this->view($exception->getForm(), Response::HTTP_BAD_REQUEST)
                         ->setTemplate("PaymentBundle:Invoice:delete.html.twig")
@@ -175,6 +166,5 @@ class InvoiceController extends FOSRestController
 
         return $this->handleView($view);
     }
-
 
 }
