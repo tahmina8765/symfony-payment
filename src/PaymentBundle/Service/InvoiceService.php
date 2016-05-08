@@ -51,28 +51,29 @@ class InvoiceService
         return $this->processForm($invoice, $formdata, 'PUT');
     }
 
+    public function delete($invoice)
+    {
+
+        $this->em->remove($invoice);
+        $this->em->flush();
+
+        return true;
+    }
+
     private function processForm($invoice, array $formdata, $method = "PUT")
     {
         $form = $this->formFactory->create(new InvoiceType(), $invoice, array('method' => $method));
         $form->submit($formdata['invoice'], 'PATCH' !== $method);
 
-
         if ($form->isValid()) {
             $invoice = $form->getData();
             $this->em->persist($invoice);
-            $this->em->flush($invoice);
+            $this->em->flush();
 
             return $invoice;
         } else {
-             throw new InvalidFormException('Invalid submitted data', $form);
-//            return array(
-//                'status'=> false,
-//                'message' => $form->getErrorsAsString()
-//            );
-//            print_r($form->getErrorsAsString());
-//            die();
+            throw new InvalidFormException('Invalid submitted data', $form);
         }
-      
     }
 
     private function createInvoice()

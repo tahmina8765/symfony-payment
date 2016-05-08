@@ -110,7 +110,7 @@ class InvoiceController extends FOSRestController
 
         if ($this->getRequest()->isMethod('GET')) {
 
-            $form = $this->container->get('form.factory')->create(new InvoiceType(), $invoice, array('method' => 'PUT'));
+            $form = $this->container->get('form.factory')->create(new InvoiceType(), $invoice, array('method' => 'POST'));
 
             $returnData = array(
                 'edit_form' => $form->createView(),
@@ -148,32 +148,33 @@ class InvoiceController extends FOSRestController
      */
     public function deleteAction(Request $request, Invoice $invoice)
     {
-        $form = $this->createDeleteForm($invoice);
-        $form->handleRequest($request);
+        if ($this->getRequest()->isMethod('GET')) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($invoice);
-            $em->flush();
+            $form = $this->container->get('form.factory')->create(new InvoiceType(), $invoice, array('method' => 'DELETE'));
+
+            $returnData = array(
+                'delete_form' => $form->createView(),
+            );
+
+            $view = $this->view($returnData, Response::HTTP_OK)
+                    ->setTemplate("PaymentBundle:Invoice:delete.html.twig")
+            ;
         }
 
-        return $this->redirectToRoute('invoice_index');
+        if ($this->getRequest()->isMethod('DELETE')) {
+            try {
+                
+                $result   = $this->get('payment.invoiceService')->delete($invoice);
+                $view     = $this->routeRedirectView('invoice_index', array(), Response::HTTP_NO_CONTENT);
+            } catch (InvalidFormException $exception) {
+                $view = $this->view($exception->getForm(), Response::HTTP_BAD_REQUEST)
+                        ->setTemplate("PaymentBundle:Invoice:delete.html.twig")
+                ;
+            }
+        }
+
+        return $this->handleView($view);
     }
 
-    /**
-     * Creates a form to delete a Invoice entity.
-     *
-     * @param Invoice $invoice The Invoice entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Invoice $invoice)
-    {
-        return $this->createFormBuilder()
-                        ->setAction($this->generateUrl('invoice_delete', array('id' => $invoice->getId())))
-                        ->setMethod('DELETE')
-                        ->getForm()
-        ;
-    }
 
 }

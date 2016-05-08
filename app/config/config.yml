@@ -90,7 +90,6 @@ fos_rest:
         rules:
             - { path: '^/', priorities: ['json', 'html', 'xml'], fallback_format: 'html' }
     view:
-#        view_response_listener: 'force'
         formats:
             jsonp: true
             json: true
@@ -103,10 +102,7 @@ fos_rest:
         default_engine: twig
         failed_validation:    400
         empty_content:        204
-#        exception_wrapper_handler:  null
-    exception:
-        enabled: true
-        exception_controller: 'PaymentBundle\Controller\InvoiceController::indexAction'
+
 
     
 
