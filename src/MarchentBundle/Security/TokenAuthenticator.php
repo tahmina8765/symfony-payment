@@ -64,9 +64,13 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        $messageKey = $exception->getMessageKey();
+        if($messageKey == 'Username could not be found.'){
+            $messageKey = 'Invalid Token';
+        }
         $data = array(
             'succsss' => false,
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+            'message' => strtr($messageKey, $exception->getMessageData())
 
                 // or to translate this message
                 // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
