@@ -1,6 +1,6 @@
-user:
-    resource: "@UserBundle/Resources/config/routing.yml"
-    prefix:   /security
+marchent:
+    resource: "@MarchentBundle/Resources/config/routing.yml"
+    prefix:   /guard
 
 payment:
     resource: "@PaymentBundle/Resources/config/routing.yml"
@@ -17,5 +17,5 @@ web:
     
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
-    prefix:   /api/doc
+    prefix:   /doc
 

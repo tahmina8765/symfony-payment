@@ -30,7 +30,7 @@ class AppKernel extends Kernel
 //            new AppBundle\AppBundle(),
             new WebBundle\WebBundle(),
             new PaymentBundle\PaymentBundle(),
-            new UserBundle\UserBundle(),
+            new MarchentBundle\MarchentBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
