@@ -1,0 +1,7 @@
+services:
+#    marchent.example:
+#        class: MarchentBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
+    marchent.api_token_authenticator:
+        class: MarchentBundle\Security\ApiTokenAuthenticator
+        arguments: ["@doctrine.orm.entity_manager"]
