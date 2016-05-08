@@ -34,12 +34,6 @@ class InvoiceService
         return $this->repository->findBy(array(), null, $limit, $offset);
     }
 
-//    public function get()
-//    {
-//        $invoices = $this->repository->findAll();
-//        return $invoices;
-//    }
-
     public function post($formdata)
     {
         $invoice = $this->createInvoice();
@@ -79,38 +73,6 @@ class InvoiceService
     private function createInvoice()
     {
         return new $this->entityClass();
-    }
-
-    public function getAllErrors($children, $template = true)
-    {
-        $this->getAllFormErrors($children);
-        return $this->allErrors;
-    }
-
-    private function getAllFormErrors($children, $template = true)
-    {
-        foreach ($children as $child) {
-            if ($child->hasErrors()) {
-                $vars   = $child->createView()->getVars();
-                $errors = $child->getErrors();
-                foreach ($errors as $error) {
-                    $this->allErrors[$vars["name"]][] = $this->convertFormErrorObjToString($error);
-                }
-            }
-
-            if ($child->hasChildren()) {
-                $this->getAllErrors($child);
-            }
-        }
-    }
-
-    private function convertFormErrorObjToString($error)
-    {
-        $errorMessageTemplate = $error->getMessageTemplate();
-        foreach ($error->getMessageParameters() as $key => $value) {
-            $errorMessageTemplate = str_replace($key, $value, $errorMessageTemplate);
-        }
-        return $errorMessageTemplate;
     }
 
 }
