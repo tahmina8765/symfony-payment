@@ -57,4 +57,6 @@ PaymentBundle\Entity\Invoice:
             column: app_name
         created:
             type: datetime
-    lifecycleCallbacks: {  }
+    lifecycleCallbacks:
+            prePersist: [ setInvoiceIdValue, setCreatedAtValue]
+           

@@ -403,7 +403,7 @@ class Invoice
     public function setCreated($created)
     {
         $this->created = $created;
-
+        
         return $this;
     }
 
@@ -415,5 +415,20 @@ class Invoice
     public function getCreated()
     {
         return $this->created;
+    }
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->created = new \DateTime();
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setInvoiceIdValue()
+    {
+        $this->invoiceId = "INV-".date("Ymdhis");
     }
 }
