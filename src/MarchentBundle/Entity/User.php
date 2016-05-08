@@ -5,12 +5,12 @@ namespace MarchentBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-
 /**
  * User
  */
 class User implements UserInterface
 {
+
     /**
      * @var int
      */
@@ -34,13 +34,12 @@ class User implements UserInterface
     /**
      * @var array
      */
-    private $roles = array();
+    private $roles;
 
     /**
      * @var string
      */
     private $apiToken;
-
 
     /**
      * Get id
@@ -133,14 +132,14 @@ class User implements UserInterface
      */
     public function setRoles($roles)
     {
-        $roles = $this->roles;
 
+        $this->roles = $roles;
         // guarantees that a user always has at least one role for security
         if (empty($roles)) {
-            $roles[] = 'ROLE_USER';
+            $this->roles = 'ROLE_USER';
         }
 
-        return array_unique($roles);
+        return $this;
     }
 
     /**
@@ -152,18 +151,18 @@ class User implements UserInterface
     {
         return $this->roles;
     }
-    
+
     /**
      * Returns the salt that was originally used to encode the password.
      */
     public function getSalt()
     {
-        
+
         // we're using bcrypt in security.yml to encode the password, so
         // the salt value is built-in and we don't have to generate one
         return;
     }
-    
+
     /**
      * Removes sensitive data from the user.
      */
@@ -172,7 +171,6 @@ class User implements UserInterface
         // if you had a plainPassword property, you'd nullify it here
         // $this->plainPassword = null;
     }
-
 
     /**
      * Set apiToken
@@ -197,13 +195,13 @@ class User implements UserInterface
     {
         return $this->apiToken;
     }
-    
+
     /**
      * @ORM\PrePersist
      */
     public function setApiTokenValue()
     {
-        $this->apiToken = "BPAY-".base_convert(sha1(uniqid(mt_rand(), true)), 16, 36).date("Ymdhis");
+        $this->apiToken = "BPAY-" . base_convert(sha1(uniqid(mt_rand(), true)), 16, 36) . date("Ymdhis");
     }
-}
 
+}

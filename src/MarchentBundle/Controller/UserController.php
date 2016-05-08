@@ -44,6 +44,7 @@ class UserController extends Controller
             $encoded = $this->container->get('security.password_encoder')
                     ->encodePassword($user, $user->getPassword());
             $user->setPassword($encoded);
+            $user->setRoles();
             
             // $user->setRoles(json_encode(array('ROLE_USER')));
             $em      = $this->getDoctrine()->getManager();
@@ -88,6 +89,8 @@ class UserController extends Controller
             $encoded = $this->container->get('security.password_encoder')
                     ->encodePassword($user, $user->getPassword());
             $user->setPassword($encoded);
+            
+            $user->setRoles(null);
             
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
