@@ -1,0 +1,3 @@
+marchent_users:
+    resource: "@MarchentBundle/Resources/config/routing/user.yml"
+    prefix:   /

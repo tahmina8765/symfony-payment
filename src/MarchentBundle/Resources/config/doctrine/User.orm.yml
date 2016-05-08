@@ -1,0 +1,32 @@
+MarchentBundle\Entity\User:
+    type: entity
+    table: marchent_users
+    repositoryClass: MarchentBundle\Repository\UserRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        username:
+            type: string
+            length: 255
+            unique: true
+        email:
+            type: string
+            length: 255
+            unique: true
+        password:
+            type: string
+            length: 255
+        roles:
+            type: json_array
+            nullable: true
+        apiToken:
+            type: string
+            length: 255
+            unique: true
+            column: api_token
+    lifecycleCallbacks: 
+        prePersist: [ setApiTokenValue ]
