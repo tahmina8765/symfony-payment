@@ -81,6 +81,7 @@ sensio_framework_extra:
     router:  { annotations: true }
 
 fos_rest:
+#    versioning: true
     disable_csrf_role: ROLE_API
     routing_loader:
         default_format: json

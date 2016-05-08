@@ -4,11 +4,11 @@ namespace PaymentBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 //use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use PaymentBundle\Controller\BongoRestController;
 use PaymentBundle\Entity\Invoice;
 use PaymentBundle\Form\InvoiceType;
 use PaymentBundle\Exception\InvalidFormException;
@@ -17,7 +17,7 @@ use PaymentBundle\Exception\InvalidFormException;
  * Invoice controller.
  *
  */
-class InvoiceController extends FOSRestController
+class InvoiceController extends BongoRestController
 {
 
     /**
@@ -27,13 +27,13 @@ class InvoiceController extends FOSRestController
     public function indexAction()
     {
 
-        // $this->denyAccessUnlessGranted('ROLE_API');  
+        // $this->denyAccessUnlessGranted('ROLE_API');
 
         $invoices = $this->get('payment.invoiceService')->all();
+        $payload  = $this->formateResponse($invoices, Response::HTTP_OK);
 
-        $view = $this->view($invoices, Response::HTTP_OK)
+        $view = $this->view($payload, Response::HTTP_OK)
                 ->setTemplate("PaymentBundle:Invoice:index.html.twig")
-                ->setTemplateVar('invoices')
         ;
 
         return $this->handleView($view);
@@ -49,12 +49,15 @@ class InvoiceController extends FOSRestController
 
             $form = $this->container->get('form.factory')->create(new InvoiceType(), new Invoice(), array('method' => 'POST'));
 
-            $returnData = array(
+            $templateData = array(
                 'form' => $form->createView(),
             );
+            
+            $returnData = $this->formateResponse('', 400, 'Method not allowed');
 
-            $view = $this->view($returnData, Response::HTTP_OK)
+            $view = $this->view($returnData, Response::HTTP_METHOD_NOT_ALLOWED)
                     ->setTemplate("PaymentBundle:Invoice:new.html.twig")
+                    ->setTemplateData($templateData)
             ;
         }
 
@@ -119,7 +122,7 @@ class InvoiceController extends FOSRestController
                 $routeOptions = array(
                     'id' => $newInvoice->getId()
                 );
-                $view         = $this->routeRedirectView('invoice_show', $routeOptions, Response::HTTP_ACCEPTED);
+                $view         = $this->routeRedirectView('invoice_show', $routeOptions, Response::HTTP_OK);
             } catch (InvalidFormException $exception) {
 
                 $view = $this->view($exception->getForm(), Response::HTTP_BAD_REQUEST)
@@ -139,10 +142,10 @@ class InvoiceController extends FOSRestController
         if ($this->getRequest()->isMethod('GET')) {
 
             // $form = $this->container->get('form.factory')->create(new InvoiceType(), $invoice, array('method' => 'DELETE'));
-            $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('invoice_delete', array('id' => $invoice->getId())))
-            ->setMethod('DELETE')
-            ->getForm();
+            $form       = $this->createFormBuilder()
+                    ->setAction($this->generateUrl('invoice_delete', array('id' => $invoice->getId())))
+                    ->setMethod('DELETE')
+                    ->getForm();
             $returnData = array(
                 'delete_form' => $form->createView(),
             );

@@ -65,6 +65,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = array(
+            'succsss' => false,
             'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
 
                 // or to translate this message
@@ -80,6 +81,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $data = array(
+            'succsss' => false,
             // you might translate this message
             'message' => 'Authentication Required'
         );
