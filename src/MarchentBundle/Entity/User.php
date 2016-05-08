@@ -34,7 +34,7 @@ class User implements UserInterface
     /**
      * @var array
      */
-    private $roles;
+    private $roles = array();
 
     /**
      * @var string
@@ -149,7 +149,7 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return $this->roles;
+        return array('ROLE_USER');
     }
 
     /**
