@@ -69,7 +69,6 @@ class InvoiceController extends BongoRestController
                 );
                 $view         = $this->routeRedirectView('invoice_show', $routeOptions, Response::HTTP_CREATED);
             } catch (InvalidFormException $exception) {
-
                 $view = $this->view($exception->getForm(), Response::HTTP_BAD_REQUEST)
                         ->setTemplate("PaymentBundle:Invoice:edit.html.twig")
                 ;
