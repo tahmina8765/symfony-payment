@@ -197,5 +197,13 @@ class User implements UserInterface
     {
         return $this->apiToken;
     }
+    
+    /**
+     * @ORM\PrePersist
+     */
+    public function setApiTokenValue()
+    {
+        $this->apiToken = "BPAY-".base_convert(sha1(uniqid(mt_rand(), true)), 16, 36).date("Ymdhis");
+    }
 }
 

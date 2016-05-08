@@ -18,8 +18,8 @@ class UserType extends AbstractType
             ->add('username')
             ->add('email')
             ->add('password')
-            ->add('roles')
-            ->add('apiToken')
+//            ->add('roles')
+//            ->add('apiToken')
         ;
     }
     

@@ -28,4 +28,5 @@ MarchentBundle\Entity\User:
             length: 255
             unique: true
             column: api_token
-    lifecycleCallbacks: {  }
+    lifecycleCallbacks: 
+        prePersist: [ setApiTokenValue ]

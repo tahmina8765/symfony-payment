@@ -40,12 +40,13 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             $encoded = $this->container->get('security.password_encoder')
-                ->encodePassword($user, $user->getPassword());
-                $user->setPassword($encoded);
-            $user->setRoles(json_encode(array('ROLE_USER')));
-            $em = $this->getDoctrine()->getManager();
+                    ->encodePassword($user, $user->getPassword());
+            $user->setPassword($encoded);
+            
+            // $user->setRoles(json_encode(array('ROLE_USER')));
+            $em      = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
@@ -83,6 +84,11 @@ class UserController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            
+            $encoded = $this->container->get('security.password_encoder')
+                    ->encodePassword($user, $user->getPassword());
+            $user->setPassword($encoded);
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
