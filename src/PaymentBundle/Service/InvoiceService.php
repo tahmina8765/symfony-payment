@@ -30,25 +30,16 @@ class InvoiceService
         return $invoices;
     }
 
-    public function post($form, $invoice)
+    public function post($formdata)
     {
-        
-        if ($form->isValid()) {
-            $this->em->persist($invoice);
-            $this->em->flush();
-            return $invoice;
-        }
-        
-        dump($form->getErrors(true));die();
-//        $invoice = $this->createInvoice();
-//        return $this->processForm($invoice, $parameters, 'POST');
+        $invoice = $this->createInvoice();
+        return $this->processForm($invoice, $formdata, 'POST');
     }
 
-    private function processForm($invoice, array $parameters, $method = "PUT")
+    private function processForm($invoice, array $formdata, $method = "PUT")
     {
-
         $form = $this->formFactory->create(new InvoiceType(), $invoice, array('method' => $method));
-        $form->submit($parameters, 'PATCH' !== $method);
+        $form->submit($formdata['invoice'], 'PATCH' !== $method);
 
         if ($form->isValid()) {
             $invoice = $form->getData();
@@ -56,7 +47,6 @@ class InvoiceService
             $this->em->flush();
             return $invoice;
         }
-        dump($form->getErrors(true));die();
         throw new InvalidFormException('Invalid submitted data', $form);
     }
 

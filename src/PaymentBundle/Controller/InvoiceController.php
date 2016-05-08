@@ -42,42 +42,41 @@ class InvoiceController extends FOSRestController
      */
     public function newAction(Request $request)
     {
+        if ($this->getRequest()->isMethod('GET')) {
 
-        $invoice = new Invoice();
-        $form    = $this->createForm('PaymentBundle\Form\InvoiceType', $invoice);
-        $form->handleRequest($request);
+            $invoice = new Invoice();
+            $form    = $this->container->get('form.factory')->create(new InvoiceType(), $invoice, array('method' => 'POST'));
 
+            $returnData = array(
+                'invoice' => $invoice,
+                'form'    => $form->createView(),
+            );
 
-        if ($this->getRequest()->isMethod('POST')) {
-            try {
-//                $data    = json_decode($request->getContent(), true);
-//                $form    = new InvoiceType();
-                $newInvoice = $this->get('payment.invoiceService')->post(
-                        $form, $invoice
-                );
+            $view = $this->view($returnData, Response::HTTP_OK)
+                    ->setTemplate("PaymentBundle:Invoice:new.html.twig")
+            ;
 
-                $routeOptions = array(
-                    'id'      => $newInvoice->getId(),
-                    '_format' => $this->container->get('request')->get('_format')
-                );
-                return $this->routeRedirectView('invoice_show', $routeOptions, Codes::HTTP_CREATED);
-            } catch (InvalidFormException $exception) {
-
-                return $exception->getForm();
-            }
-
+            return $this->handleView($view);
         }
 
-        $returnData = array(
-            'invoice' => $invoice,
-            'form'    => $form->createView(),
-        );
+        try {
+            $formdata = $request->request->all();
+            $newInvoice = $this->get('payment.invoiceService')->post(
+                    $formdata
+            );
 
-        $view = $this->view($returnData, Response::HTTP_OK)
-                ->setTemplate("PaymentBundle:Invoice:new.html.twig")
-        ;
+            $routeOptions = array(
+                'id'      => $newInvoice->getId()
+            );
+                        
+            $view = $this->routeRedirectView('invoice_show', $routeOptions, Response::HTTP_CREATED);
+        } catch (InvalidFormException $exception) {
 
+            return $exception->getForm();
+        }
+        
         return $this->handleView($view);
+
     }
 
     /**
@@ -88,10 +87,10 @@ class InvoiceController extends FOSRestController
     {
         $deleteForm = $this->createDeleteForm($invoice);
         $returnData = array(
-                    'invoice'     => $invoice,
-                    'delete_form' => $deleteForm->createView(),
+            'invoice'     => $invoice,
+            'delete_form' => $deleteForm->createView(),
         );
-        $view = $this->view($returnData, Codes::HTTP_OK)
+        $view       = $this->view($returnData, Response::HTTP_OK)
                 ->setTemplate("PaymentBundle:Invoice:show.html.twig")
 //                ->setTemplateVar('invoice')
         ;
@@ -166,6 +165,3 @@ class InvoiceController extends FOSRestController
     }
 
 }
-
-
-        
