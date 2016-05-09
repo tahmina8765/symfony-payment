@@ -2,6 +2,12 @@ services:
     payment.invoiceService:
         class: PaymentBundle\Service\InvoiceService
         arguments: [ "@doctrine.orm.entity_manager", "PaymentBundle\Entity\Invoice", "@form.factory"]
+    payment.paymentService:
+        class: PaymentBundle\Service\PaymentService
+        arguments: [ "@payment.invoiceService", "@payment.BDTelcoService"]
+    payment.BDTelcoService:
+        class: PaymentBundle\Service\BDTelcoService
+        arguments: [ %BDTelco_URL%, %BDTelco_key%]
 #        arguments: ["@service_id", "plain_value", %parameter%]
 #    payment.example:
 #        class: PaymentBundle\Example

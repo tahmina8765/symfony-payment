@@ -4,7 +4,7 @@ PaymentBundle\Entity\Invoice:
             - NotBlank: ~
             - NotNull: ~
             - Length:
-                min: 2
+                min: 1
                 max: 50
-                minMessage: "Amount must be at least  characters length"
-                maxMessage: "Amount cannot be longer than  characters length"
+                minMessage: "Amount must be at least 1 characters length"
+                maxMessage: "Amount cannot be longer than 50 characters length"

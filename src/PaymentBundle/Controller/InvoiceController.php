@@ -45,14 +45,13 @@ class InvoiceController extends BongoRestController
      */
     public function newAction(Request $request)
     {
+        $form = $this->container->get('form.factory')->create(new InvoiceType(), new Invoice(), array('method' => 'POST'));
+
+        $templateData = array(
+            'form' => $form->createView(),
+        );
         if ($this->getRequest()->isMethod('GET')) {
 
-            $form = $this->container->get('form.factory')->create(new InvoiceType(), new Invoice(), array('method' => 'POST'));
-
-            $templateData = array(
-                'form' => $form->createView(),
-            );
-            
             $returnData = $this->formateResponse('', 400, 'Method not allowed');
 
             $view = $this->view($returnData, Response::HTTP_METHOD_NOT_ALLOWED)
@@ -63,11 +62,22 @@ class InvoiceController extends BongoRestController
 
         if ($this->getRequest()->isMethod('POST')) {
             try {
-                $newInvoice   = $this->get('payment.invoiceService')->post($request->request->all());
-                $routeOptions = array(
-                    'id' => $newInvoice->getId()
-                );
-                $view         = $this->routeRedirectView('invoice_show', $routeOptions, Response::HTTP_CREATED);
+                $newInvoice = $this->get('payment.invoiceService')->post($request->request->all());
+
+                // Colect Payment
+                $payment = $this->get('payment.paymentService')->processPayment($newInvoice);
+                if (!$payment) {
+                    $routeOptions = array(
+                        'id' => $newInvoice->getId()
+                    );
+                    $view         = $this->routeRedirectView('invoice_show', $routeOptions, Response::HTTP_CREATED);
+                } else {
+                    $returnData = $this->formateResponse('', 100, 'Payment Failed');
+                    $view       = $this->view($returnData, Response::HTTP_BAD_REQUEST)
+                            ->setTemplate("PaymentBundle:Invoice:new.html.twig")
+                            ->setTemplateData($templateData)
+                    ;
+                }
             } catch (InvalidFormException $exception) {
                 $view = $this->view($exception->getForm(), Response::HTTP_BAD_REQUEST)
                         ->setTemplate("PaymentBundle:Invoice:edit.html.twig")

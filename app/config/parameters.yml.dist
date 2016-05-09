@@ -19,5 +19,5 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     #API Key for Bongobd
-    api_key: BjORgKhZ0mQVSLdf
-    bd_mobile_key: DCDZMYYXFZ7Q3MW0WTXLE9M7RITNDO6N3U7DO9U88I4ZS9MR8S
+    BDTelco_URL: http://103.17.180.103:8088/JsonChannel
+    BDTelco_key: DCDZMYYXFZ7Q3MW0WTXLE9M7RITNDO6N3U7DO9U88I4ZS9MR8S
